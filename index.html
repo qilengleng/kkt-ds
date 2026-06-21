@@ -1,8 +1,3 @@
-<div class="bottom-nav" style="position:absolute;bottom:0;left:0;right:0;height:56px;">
-    <button class="nav-item active" id="nav-f" onclick="showTab('f')"><span class="icon">👥</span><span class="label">朋友</span></button>
-    <button class="nav-item" id="nav-c" onclick="showTab('c')"><span class="icon">💬</span><span class="label">聊天</span></button>
-    <button class="nav-item" id="nav-m" onclick="showTab('m')"><span class="icon">⚙️</span><span class="label">更多</span></button>
-</div>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -11,47 +6,53 @@
 <title>KakaoTalk</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body,html{height:100%;overflow:hidden;font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#000;}
-:root{
-  --yellow:#FEE500;--yellow-dark:#F5D800;
-  --chat-bg:#9DBACC;--header-bg:#B2C7D9;--input-bg:#d4e0ea;
-  --text:#1a1a1a;--muted:#6b7280;--border:#e5e7eb;--red:#f87171;
-}
-#app{width:100%;max-width:430px;height:100vh;margin:0 auto;display:flex;flex-direction:column;position:relative;overflow:hidden;background:#fff;}
-.screen{position:absolute;inset:0;display:flex;flex-direction:column;transition:transform .3s ease;background:#fff;}
-.screen.hidden{transform:translateX(100%);}
-.bottom-nav{display:flex;background:#fff;border-top:1px solid var(--border);flex-shrink:0;z-index:10;}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 0 10px;cursor:pointer;gap:3px;border:none;background:none;}
+body,html{height:100%;overflow:hidden;font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#fff;}
+:root{--yellow:#FEE500;--yellow-dark:#F5D800;--chat-bg:#9DBACC;--header-bg:#B2C7D9;--input-bg:#d4e0ea;--text:#1a1a1a;--muted:#6b7280;--border:#e5e7eb;--red:#f87171;}
+#app{width:100%;max-width:430px;height:100vh;margin:0 auto;position:relative;overflow:hidden;background:#fff;}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff;}
+.screen.hidden{display:none;}
+.bottom-nav{display:flex;background:#fff;border-top:1px solid var(--border);position:absolute;bottom:0;left:0;right:0;height:56px;z-index:10;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:3px;border:none;background:none;}
 .nav-item .icon{font-size:22px;line-height:1;}
 .nav-item .label{font-size:10px;color:var(--muted);}
 .nav-item.active .label{color:var(--yellow-dark);font-weight:700;}
-.top-bar{display:flex;align-items:center;padding:12px 16px;gap:10px;flex-shrink:0;}
+.top-bar{display:flex;align-items:center;padding:12px 16px;gap:10px;flex-shrink:0;background:#fff;border-bottom:1px solid var(--border);}
 .top-bar h2{font-size:18px;font-weight:700;flex:1;}
 .top-bar .icon-btn{background:none;border:none;font-size:22px;cursor:pointer;padding:4px;}
+.tab-content{position:absolute;inset:0;top:0;bottom:56px;overflow-y:auto;display:flex;flex-direction:column;}
+.tab-content.hidden{display:none;}
 .my-profile{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--border);cursor:pointer;}
-.my-profile .av{width:52px;height:52px;font-size:26px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;}
-.my-profile .name{font-size:16px;font-weight:700;}
-.my-profile .status{font-size:12px;color:var(--muted);margin-top:2px;}
+.av{border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .sec-title{font-size:11px;color:var(--muted);padding:10px 16px 4px;font-weight:600;}
 .friend-item{display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer;}
-.friend-item .av{width:44px;height:44px;font-size:22px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;}
-.friend-item .name{font-size:14px;font-weight:600;}
-.friend-item .st{font-size:12px;color:var(--muted);margin-top:1px;}
+.friend-item:active{background:#f9fafb;}
 .chat-list-item{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border-bottom:1px solid #f3f4f6;}
-.chat-list-item .av{width:48px;height:48px;font-size:24px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;}
-.chat-list-item .info{flex:1;min-width:0;}
-.chat-list-item .row1{display:flex;justify-content:space-between;}
-.chat-list-item .cname{font-size:15px;font-weight:700;}
-.chat-list-item .time{font-size:11px;color:var(--muted);}
-.chat-list-item .preview{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
-  #chat-screen{background:var(--chat-bg);}
-.chat-header{background:var(--header-bg);padding:10px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.chat-header .back{font-size:24px;background:none;border:none;cursor:pointer;color:#1a1a1a;line-height:1;}
-.chat-header .hav{width:36px;height:36px;border-radius:10px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:18px;}
-.chat-header .hinfo{flex:1;}
-.chat-header .hname{font-size:15px;font-weight:700;}
-.chat-header .hst{font-size:11px;color:#4a6070;}
-.chat-header .hbtn{background:none;border:none;font-size:20px;cursor:pointer;color:#1a1a1a;padding:4px;}
+.chat-list-item:active{background:#f9fafb;}
+.cinfo{flex:1;min-width:0;}
+.row1{display:flex;justify-content:space-between;align-items:center;}
+.cname{font-size:15px;font-weight:700;}
+.ctime{font-size:11px;color:var(--muted);}
+.cprev{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.phero{background:linear-gradient(135deg,#B2C7D9,#9DBACC);padding:28px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.bigav{width:80px;height:80px;border-radius:50%;font-size:40px;background:var(--yellow);display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,0.15);}
+.uname{font-size:20px;font-weight:700;color:#fff;}
+.umsg{font-size:13px;color:rgba(255,255,255,.8);}
+.editbtn{margin-top:4px;background:rgba(255,255,255,.25);border:none;border-radius:20px;padding:6px 18px;font-size:13px;color:#fff;cursor:pointer;font-weight:600;}
+.stitle{font-size:12px;color:var(--muted);padding:14px 16px 4px;font-weight:600;text-transform:uppercase;}
+.sitem{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;border-bottom:1px solid #f3f4f6;}
+.sitem:active{background:#f9fafb;}
+.sicon{font-size:22px;width:28px;text-align:center;}
+.slabel{font-size:15px;flex:1;}
+.sval{font-size:13px;color:var(--muted);}
+.sarrow{color:#d1d5db;font-size:16px;}
+#chat-screen{background:var(--chat-bg);}
+.chat-header{background:var(--header-bg);padding:10px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;border-bottom:1px solid rgba(0,0,0,0.07);}
+.chat-header .back{font-size:28px;background:none;border:none;cursor:pointer;color:#1a1a1a;line-height:1;padding:0 4px;}
+.hav{width:36px;height:36px;border-radius:10px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.hinfo{flex:1;}
+.hname{font-size:15px;font-weight:700;}
+.hst{font-size:11px;color:#4a6070;}
+.hbtn{background:none;border:none;font-size:20px;cursor:pointer;color:#1a1a1a;padding:4px;}
 .messages{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-height:0;}
 .messages::-webkit-scrollbar{width:3px;}
 .messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.3);border-radius:3px;}
@@ -79,7 +80,7 @@ body,html{height:100%;overflow:hidden;font-family:'PingFang SC','Microsoft YaHei
 .typing-bubble span:nth-child(2){animation-delay:.2s;}
 .typing-bubble span:nth-child(3){animation-delay:.4s;}
 @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
-.epicker{background:#fff;border-top:1px solid var(--border);padding:10px;display:none;flex-wrap:wrap;gap:4px;max-height:130px;overflow-y:auto;}
+.epicker{background:#fff;border-top:1px solid var(--border);padding:10px;display:none;flex-wrap:wrap;gap:4px;max-height:130px;overflow-y:auto;flex-shrink:0;}
 .epicker.show{display:flex;}
 .ebtn{font-size:24px;padding:4px;border:none;background:none;cursor:pointer;border-radius:6px;}
 .input-area{background:var(--input-bg);padding:8px 10px 12px;border-top:1px solid rgba(255,255,255,0.3);flex-shrink:0;}
@@ -92,20 +93,9 @@ textarea::placeholder{color:#aaa;}
 .sbtn:disabled{background:#e5e7eb;box-shadow:none;cursor:not-allowed;}
 .notif{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-100px);background:#fff;border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,0.15);z-index:999;min-width:260px;max-width:340px;transition:transform .3s ease;cursor:pointer;}
 .notif.show{transform:translateX(-50%) translateY(0);}
-.nav{width:36px;height:36px;border-radius:10px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.nav-icon{width:36px;height:36px;border-radius:10px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 .ntitle{font-size:13px;font-weight:700;}
 .nbody{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;}
-.phero{background:linear-gradient(135deg,#B2C7D9,#9DBACC);padding:28px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;}
-.bigav{width:80px;height:80px;border-radius:50%;font-size:40px;background:var(--yellow);display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,0.15);}
-.uname{font-size:20px;font-weight:700;color:#fff;}
-.umsg{font-size:13px;color:rgba(255,255,255,.8);}
-.editbtn{margin-top:4px;background:rgba(255,255,255,.25);border:none;border-radius:20px;padding:6px 18px;font-size:13px;color:#fff;cursor:pointer;font-weight:600;}
-.stitle{font-size:12px;color:var(--muted);padding:14px 16px 4px;font-weight:600;text-transform:uppercase;}
-.sitem{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;border-bottom:1px solid #f3f4f6;}
-.sicon{font-size:22px;width:28px;text-align:center;}
-.slabel{font-size:15px;flex:1;}
-.sval{font-size:13px;color:var(--muted);}
-.sarrow{color:#d1d5db;font-size:16px;}
 .moverlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:flex-end;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;}
 .moverlay.show{opacity:1;pointer-events:all;}
 .msheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 32px;width:100%;max-width:430px;transform:translateY(100%);transition:transform .3s ease;}
@@ -120,7 +110,7 @@ textarea::placeholder{color:#aaa;}
 .avgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px;}
 .avopt{width:52px;height:52px;border-radius:50%;font-size:26px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;cursor:pointer;border:3px solid transparent;}
 .avopt.sel{border-color:var(--yellow-dark);}
-#api-screen{z-index:300;background:#fff;justify-content:center;align-items:center;padding:32px 24px;}
+#api-screen{justify-content:center;align-items:center;padding:32px 24px;}
 .acard{width:100%;max-width:340px;text-align:center;}
 .acard .logo{font-size:48px;margin-bottom:8px;}
 .acard h2{font-size:20px;font-weight:700;margin-bottom:6px;}
@@ -133,22 +123,108 @@ textarea::placeholder{color:#aaa;}
 </head>
 <body>
 <div id="app">
-  <div class="moverlay" id="pm"><div class="msheet"><h3>编辑昵称</h3><input type="text" id="pm-n" placeholder="输入昵称" maxlength="20"/><div class="btnrow"><button class="mbtn s" onclick="closeM('pm')">取消</button><button class="mbtn p" onclick="savePm()">保存</button></div></div></div>
+
+<div class="screen" id="api-screen">
+  <div class="acard">
+    <div class="logo">🐋</div>
+    <h2>DeepSeek Chat</h2>
+    <p>输入你的 DeepSeek API Key<br/>Key 仅保存在本地内存中</p>
+    <input type="password" id="keyInput" placeholder="sk-..." autocomplete="off"/>
+    <p class="aerr" id="keyErr">格式不正确，Key 应以 sk- 开头</p>
+    <button class="abtn" onclick="submitKey()">开始使用 ➤</button>
+  </div>
+</div>
+
+<div class="screen hidden" id="main-screen">
+  <div id="ftab" class="tab-content">
+    <div class="top-bar"><h2>朋友</h2><button class="icon-btn">🔍</button></div>
+    <div style="overflow-y:auto;flex:1;">
+      <div class="my-profile" onclick="showTab('m')">
+        <div class="av" id="fl-mav" style="width:52px;height:52px;font-size:26px;">😊</div>
+        <div><div style="font-size:16px;font-weight:700;" id="fl-mname">我的昵称</div><div style="font-size:12px;color:var(--muted);margin-top:2px;" id="fl-mst">个性签名</div></div>
+      </div>
+      <div class="sec-title">朋友 1</div>
+      <div class="friend-item" onclick="openChat()">
+        <div class="av" id="fl-aav" style="width:44px;height:44px;font-size:22px;">🐋</div>
+        <div><div style="font-size:14px;font-weight:600;" id="fl-aname">DeepSeek AI</div><div style="font-size:12px;color:var(--muted);margin-top:1px;">AI 助手</div></div>
+      </div>
+    </div>
+  </div>
+  <div id="ctab" class="tab-content hidden">
+    <div class="top-bar"><h2>聊天</h2><button class="icon-btn" onclick="openChat()">✏️</button></div>
+    <div style="overflow-y:auto;flex:1;">
+      <div class="chat-list-item" onclick="openChat()">
+        <div class="av" id="cl-aav" style="width:48px;height:48px;font-size:24px;">🐋</div>
+        <div class="cinfo">
+          <div class="row1"><span class="cname" id="cl-aname">DeepSeek AI</span><span class="ctime" id="cl-time">现在</span></div>
+          <div class="cprev" id="cl-prev">点击开始聊天</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="mtab" class="tab-content hidden">
+    <div style="overflow-y:auto;flex:1;">
+      <div class="phero">
+        <div class="bigav" id="more-av">😊</div>
+        <div class="uname" id="more-name">我的昵称</div>
+        <div class="umsg" id="more-st">个性签名</div>
+        <button class="editbtn" onclick="openM('pm')">编辑个人信息</button>
+      </div>
+      <div class="stitle">账号</div>
+      <div class="sitem" onclick="openM('pm')"><span class="sicon">👤</span><span class="slabel">昵称</span><span class="sval" id="st-name">我的昵称</span><span class="sarrow">›</span></div>
+      <div class="sitem" onclick="openM('am')"><span class="sicon">🖼</span><span class="slabel">头像</span><span class="sarrow">›</span></div>
+      <div class="sitem" onclick="openM('sm')"><span class="sicon">💬</span><span class="slabel">个性签名</span><span class="sval" id="st-st">个性签名</span><span class="sarrow">›</span></div>
+      <div class="stitle">AI 设置</div>
+      <div class="sitem" onclick="openM('aim')"><span class="sicon">🐋</span><span class="slabel">AI 头像</span><span class="sarrow">›</span></div>
+      <div class="sitem" onclick="openM('anm')"><span class="sicon">✏️</span><span class="slabel">AI 备注名</span><span class="sval" id="st-ainame">DeepSeek AI</span><span class="sarrow">›</span></div>
+      <div class="sitem" onclick="openM('km')"><span class="sicon">🔑</span><span class="slabel">更换 API Key</span><span class="sarrow">›</span></div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <button class="nav-item active" id="nav-f" onclick="showTab('f')"><span class="icon">👥</span><span class="label">朋友</span></button>
+    <button class="nav-item" id="nav-c" onclick="showTab('c')"><span class="icon">💬</span><span class="label">聊天</span></button>
+    <button class="nav-item" id="nav-m" onclick="showTab('m')"><span class="icon">⚙️</span><span class="label">更多</span></button>
+  </div>
+</div>
+
+<div class="screen hidden" id="chat-screen" style="background:var(--chat-bg);">
+  <div class="chat-header">
+    <button class="back" onclick="closeChat()">‹</button>
+    <div class="hav" id="ch-av">🐋</div>
+    <div class="hinfo"><div class="hname" id="ch-name">DeepSeek AI</div><div class="hst" id="ch-st">在线</div></div>
+    <button class="hbtn">🔍</button><button class="hbtn">☰</button>
+  </div>
+  <div class="messages" id="messages"><div class="date-div" id="chat-date"></div></div>
+  <div class="epicker" id="epicker"></div>
+  <div class="input-area">
+    <div class="input-row">
+      <button class="iabtn" onclick="toggleE()">😊</button>
+      <div class="ibox"><textarea id="msginput" placeholder="메시지 입력" rows="1"></textarea></div>
+      <button class="iabtn sbtn" id="sbtn" onclick="sendMsg()" disabled>➤</button>
+    </div>
+  </div>
+</div>
+
+<div class="notif" id="notif" onclick="notifClick()">
+  <div class="nav-icon" id="n-av">🐋</div>
+  <div><div class="ntitle" id="n-title">DeepSeek AI</div><div class="nbody" id="n-body"></div></div>
+</div>
+
+<div class="moverlay" id="pm"><div class="msheet"><h3>编辑昵称</h3><input type="text" id="pm-n" placeholder="输入昵称" maxlength="20"/><div class="btnrow"><button class="mbtn s" onclick="closeM('pm')">取消</button><button class="mbtn p" onclick="savePm()">保存</button></div></div></div>
 <div class="moverlay" id="am"><div class="msheet"><h3>选择我的头像</h3><div class="avgrid" id="my-avg"></div><div class="btnrow"><button class="mbtn s" onclick="closeM('am')">取消</button><button class="mbtn p" onclick="saveAm()">保存</button></div></div></div>
 <div class="moverlay" id="sm"><div class="msheet"><h3>编辑个性签名</h3><input type="text" id="sm-s" placeholder="输入签名" maxlength="40"/><div class="btnrow"><button class="mbtn s" onclick="closeM('sm')">取消</button><button class="mbtn p" onclick="saveSm()">保存</button></div></div></div>
 <div class="moverlay" id="aim"><div class="msheet"><h3>选择 AI 头像</h3><div class="avgrid" id="ai-avg"></div><div class="btnrow"><button class="mbtn s" onclick="closeM('aim')">取消</button><button class="mbtn p" onclick="saveAim()">保存</button></div></div></div>
 <div class="moverlay" id="anm"><div class="msheet"><h3>编辑 AI 备注名</h3><input type="text" id="anm-n" placeholder="输入备注名" maxlength="20"/><div class="btnrow"><button class="mbtn s" onclick="closeM('anm')">取消</button><button class="mbtn p" onclick="saveAnm()">保存</button></div></div></div>
 <div class="moverlay" id="km"><div class="msheet"><h3>更换 API Key</h3><input type="password" id="km-k" placeholder="sk-..." autocomplete="off"/><div class="btnrow"><button class="mbtn s" onclick="closeM('km')">取消</button><button class="mbtn p" onclick="saveKm()">保存</button></div></div></div>
+
 </div>
 <script>
 const S={apiKey:'',myName:'我的昵称',myAv:'😊',mySt:'个性签名',aiName:'DeepSeek AI',aiAv:'🐋',selMyAv:'',selAiAv:'',hist:[]};
 const EMOJIS=['😊','😂','🥰','😎','🤔','😅','🙏','👍','❤️','🎉','🔥','💯','😭','🤣','😍','🥳','😤','😴','🤗','😬','👏','✨','💪','🌟','😋','🤩','😇','🥺','😆','🤪'];
 const MY_AVS=['😊','👤','🧑','👩','👦','🐱','🐶','🦊','🐼','🐨','🦁','🐯','🐻','🐸','🦋','🌸','⭐','🍀','🎮','🎵'];
 const AI_AVS=['🐋','🤖','🧠','👾','🦾','🌊','🐬','🦈','🐙','🐠','💻','🔮','🛸','⚡','🌌','🔬','🧬','💡','🎯','🐳'];
-
 document.getElementById('chat-date').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
 document.getElementById('keyInput').addEventListener('keydown',e=>{if(e.key==='Enter')submitKey();});
-
 function submitKey(){
   const v=document.getElementById('keyInput').value.trim();
   if(!v.startsWith('sk-')){document.getElementById('keyErr').style.display='block';return;}
@@ -158,7 +234,6 @@ function submitKey(){
   showTab('f');
   addBubble('你好！我是'+S.aiName+'，有什么可以帮你的吗？😊','ai');
 }
-
 function showTab(t){
   ['f','c','m'].forEach(x=>{
     document.getElementById(x+'tab').classList.add('hidden');
@@ -167,23 +242,11 @@ function showTab(t){
   document.getElementById(t+'tab').classList.remove('hidden');
   document.getElementById('nav-'+t).classList.add('active');
 }
-
-function openChat(){
-  document.getElementById('chat-screen').classList.remove('hidden');
-  updateUI();scrollBottom();
-}
-function closeChat(){
-  document.getElementById('chat-screen').classList.add('hidden');
-  document.getElementById('epicker').classList.remove('show');
-}
-
+function openChat(){document.getElementById('chat-screen').classList.remove('hidden');updateUI();scrollBottom();}
+function closeChat(){document.getElementById('chat-screen').classList.add('hidden');document.getElementById('epicker').classList.remove('show');}
 const msginput=document.getElementById('msginput');
-msginput.addEventListener('input',()=>{
-  msginput.style.height='auto';msginput.style.height=msginput.scrollHeight+'px';
-  document.getElementById('sbtn').disabled=!msginput.value.trim();
-});
+msginput.addEventListener('input',()=>{msginput.style.height='auto';msginput.style.height=msginput.scrollHeight+'px';document.getElementById('sbtn').disabled=!msginput.value.trim();});
 msginput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
-
 async function sendMsg(){
   const text=msginput.value.trim();if(!text||!S.apiKey)return;
   msginput.value='';msginput.style.height='auto';
@@ -191,18 +254,10 @@ async function sendMsg(){
   document.getElementById('epicker').classList.remove('show');
   addBubble(text,'user');
   S.hist.push({role:'user',content:text});
-  updatePreview(text);
-  showTyping();
+  updatePreview(text);showTyping();
   document.getElementById('ch-st').textContent='正在输入…';
   try{
-    const res=await fetch('https://api.deepseek.com/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.apiKey},
-      body:JSON.stringify({model:'deepseek-chat',max_tokens:1024,messages:[
-        {role:'system',content:'你是一个友好的AI助手，请用用户的语言简洁自然地回复。'},
-        ...S.hist
-      ]})
-    });
+    const res=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.apiKey},body:JSON.stringify({model:'deepseek-chat',max_tokens:1024,messages:[{role:'system',content:'你是一个友好的AI助手，请用用户的语言简洁自然地回复。'},...S.hist]})});
     if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'HTTP '+res.status);}
     const data=await res.json();
     const reply=data.choices?.[0]?.message?.content||'（无回复）';
@@ -212,7 +267,6 @@ async function sendMsg(){
   }catch(err){removeTyping();addBubble('⚠️ '+(err.message||'发送失败'),'ai');}
   finally{document.getElementById('ch-st').textContent='在线';}
 }
-
 function addBubble(text,role){
   const isEmo=/^[\p{Emoji}\s]+$/u.test(text)&&text.length<=4;
   const row=document.createElement('div');row.className='msg-row '+role;
@@ -221,23 +275,18 @@ function addBubble(text,role){
   if(role==='ai'){const sn=document.createElement('div');sn.className='sname';sn.textContent=S.aiName;g.appendChild(sn);}
   const bw=document.createElement('div');bw.className='bwrap';
   const b=document.createElement('div');b.className='bubble '+(isEmo?'emo':role);b.textContent=text;
-  const m=document.createElement('div');m.className='meta';
-  m.innerHTML='<div class="rc">1</div><div class="ts">'+nowStr()+'</div>';
+  const m=document.createElement('div');m.className='meta';m.innerHTML='<div class="rc">1</div><div class="ts">'+nowStr()+'</div>';
   if(role==='user'){bw.appendChild(m);bw.appendChild(b);}else{bw.appendChild(b);bw.appendChild(m);}
   g.appendChild(bw);row.appendChild(g);
   document.getElementById('messages').appendChild(row);scrollBottom();
 }
-
 function showTyping(){
   const row=document.createElement('div');row.className='typing-row';row.id='typing';
   const av=document.createElement('div');av.className='mav';av.textContent=S.aiAv;
-  const tb=document.createElement('div');tb.className='typing-bubble';
-  tb.innerHTML='<span></span><span></span><span></span>';
-  row.appendChild(av);row.appendChild(tb);
-  document.getElementById('messages').appendChild(row);scrollBottom();
+  const tb=document.createElement('div');tb.className='typing-bubble';tb.innerHTML='<span></span><span></span><span></span>';
+  row.appendChild(av);row.appendChild(tb);document.getElementById('messages').appendChild(row);scrollBottom();
 }
 function removeTyping(){const t=document.getElementById('typing');if(t)t.remove();}
-
 let ntimer;
 function showNotif(text){
   document.getElementById('n-av').textContent=S.aiAv;
@@ -247,42 +296,26 @@ function showNotif(text){
   clearTimeout(ntimer);ntimer=setTimeout(()=>document.getElementById('notif').classList.remove('show'),3500);
 }
 function notifClick(){document.getElementById('notif').classList.remove('show');openChat();}
-
 const ep=document.getElementById('epicker');
 EMOJIS.forEach(e=>{const b=document.createElement('button');b.className='ebtn';b.textContent=e;b.onclick=()=>{msginput.value+=e;msginput.dispatchEvent(new Event('input'));msginput.focus();};ep.appendChild(b);});
 function toggleE(){ep.classList.toggle('show');}
-
 function buildAvGrid(id,opts,key){
   const g=document.getElementById(id);
-  opts.forEach(e=>{const d=document.createElement('div');d.className='avopt';d.textContent=e;
-    d.onclick=()=>{g.querySelectorAll('.avopt').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');S[key]=e;};
-    g.appendChild(d);});
+  opts.forEach(e=>{const d=document.createElement('div');d.className='avopt';d.textContent=e;d.onclick=()=>{g.querySelectorAll('.avopt').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');S[key]=e;};g.appendChild(d);});
 }
 buildAvGrid('my-avg',MY_AVS,'selMyAv');
 buildAvGrid('ai-avg',AI_AVS,'selAiAv');
-
 function nowStr(){return new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false});}
 function scrollBottom(){const m=document.getElementById('messages');m.scrollTop=m.scrollHeight;}
 function updatePreview(t){document.getElementById('cl-prev').textContent=t;document.getElementById('cl-time').textContent=nowStr();}
-
 function updateUI(){
-  document.getElementById('fl-mav').textContent=S.myAv;
-  document.getElementById('fl-mname').textContent=S.myName;
-  document.getElementById('fl-mst').textContent=S.mySt;
-  document.getElementById('fl-aav').textContent=S.aiAv;
-  document.getElementById('fl-aname').textContent=S.aiName;
-  document.getElementById('cl-aav').textContent=S.aiAv;
-  document.getElementById('cl-aname').textContent=S.aiName;
-  document.getElementById('ch-av').textContent=S.aiAv;
-  document.getElementById('ch-name').textContent=S.aiName;
-  document.getElementById('more-av').textContent=S.myAv;
-  document.getElementById('more-name').textContent=S.myName;
-  document.getElementById('more-st').textContent=S.mySt;
-  document.getElementById('st-name').textContent=S.myName;
-  document.getElementById('st-st').textContent=S.mySt;
-  document.getElementById('st-ainame').textContent=S.aiName;
+  document.getElementById('fl-mav').textContent=S.myAv;document.getElementById('fl-mname').textContent=S.myName;document.getElementById('fl-mst').textContent=S.mySt;
+  document.getElementById('fl-aav').textContent=S.aiAv;document.getElementById('fl-aname').textContent=S.aiName;
+  document.getElementById('cl-aav').textContent=S.aiAv;document.getElementById('cl-aname').textContent=S.aiName;
+  document.getElementById('ch-av').textContent=S.aiAv;document.getElementById('ch-name').textContent=S.aiName;
+  document.getElementById('more-av').textContent=S.myAv;document.getElementById('more-name').textContent=S.myName;document.getElementById('more-st').textContent=S.mySt;
+  document.getElementById('st-name').textContent=S.myName;document.getElementById('st-st').textContent=S.mySt;document.getElementById('st-ainame').textContent=S.aiName;
 }
-
 function openM(id){
   if(id==='pm')document.getElementById('pm-n').value=S.myName;
   if(id==='sm')document.getElementById('sm-s').value=S.mySt;
