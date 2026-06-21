@@ -1,3 +1,8 @@
+<div class="bottom-nav" style="position:absolute;bottom:0;left:0;right:0;height:56px;">
+    <button class="nav-item active" id="nav-f" onclick="showTab('f')"><span class="icon">👥</span><span class="label">朋友</span></button>
+    <button class="nav-item" id="nav-c" onclick="showTab('c')"><span class="icon">💬</span><span class="label">聊天</span></button>
+    <button class="nav-item" id="nav-m" onclick="showTab('m')"><span class="icon">⚙️</span><span class="label">更多</span></button>
+</div>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -39,7 +44,7 @@ body,html{height:100%;overflow:hidden;font-family:'PingFang SC','Microsoft YaHei
 .chat-list-item .cname{font-size:15px;font-weight:700;}
 .chat-list-item .time{font-size:11px;color:var(--muted);}
 .chat-list-item .preview{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
-#chat-screen{background:var(--chat-bg);}
+  #chat-screen{background:var(--chat-bg);}
 .chat-header{background:var(--header-bg);padding:10px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .chat-header .back{font-size:24px;background:none;border:none;cursor:pointer;color:#1a1a1a;line-height:1;}
 .chat-header .hav{width:36px;height:36px;border-radius:10px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:18px;}
@@ -128,93 +133,7 @@ textarea::placeholder{color:#aaa;}
 </head>
 <body>
 <div id="app">
-<div class="screen" id="api-screen">
-  <div class="acard">
-    <div class="logo">🐋</div>
-    <h2>DeepSeek Chat</h2>
-    <p>输入你的 DeepSeek API Key<br/>Key 仅保存在本地内存中</p>
-    <input type="password" id="keyInput" placeholder="sk-..." autocomplete="off"/>
-    <p class="aerr" id="keyErr">格式不正确，Key 应以 sk- 开头</p>
-    <button class="abtn" onclick="submitKey()">开始使用 ➤</button>
-  </div>
-</div>
-<div class="screen hidden" id="main-screen">
-  <div id="ftab" class="hidden" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-bottom:56px;">
-    <div class="top-bar" style="background:#fff;border-bottom:1px solid var(--border);">
-      <h2>朋友</h2><button class="icon-btn">🔍</button>
-    </div>
-    <div style="overflow-y:auto;flex:1;">
-      <div class="my-profile" onclick="showTab('more')">
-        <div class="av" id="fl-mav">😊</div>
-        <div><div class="name" id="fl-mname">我的昵称</div><div class="status" id="fl-mst">个性签名</div></div>
-      </div>
-      <div class="sec-title">朋友 1</div>
-      <div class="friend-item" onclick="openChat()">
-        <div class="av" id="fl-aav">🐋</div>
-        <div><div class="name" id="fl-aname">DeepSeek AI</div><div class="st">AI 助手</div></div>
-      </div>
-    </div>
-  </div>
-  <div id="ctab" class="hidden" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-bottom:56px;">
-    <div class="top-bar" style="background:#fff;border-bottom:1px solid var(--border);">
-      <h2>聊天</h2><button class="icon-btn" onclick="openChat()">✏️</button>
-    </div>
-    <div style="overflow-y:auto;flex:1;">
-      <div class="chat-list-item" onclick="openChat()">
-        <div class="av" id="cl-aav">🐋</div>
-        <div class="info">
-          <div class="row1"><span class="cname" id="cl-aname">DeepSeek AI</span><span class="time" id="cl-time">现在</span></div>
-          <div class="preview" id="cl-prev">点击开始聊天</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="mtab" class="hidden" style="position:absolute;inset:0;overflow-y:auto;padding-bottom:56px;">
-    <div class="phero">
-      <div class="bigav" id="more-av">😊</div>
-      <div class="uname" id="more-name">我的昵称</div>
-      <div class="umsg" id="more-st">个性签名</div>
-      <button class="editbtn" onclick="openM('pm')">编辑个人信息</button>
-    </div>
-    <div class="stitle">账号</div>
-    <div class="sitem" onclick="openM('pm')"><span class="sicon">👤</span><span class="slabel">昵称</span><span class="sval" id="st-name">我的昵称</span><span class="sarrow">›</span></div>
-    <div class="sitem" onclick="openM('am')"><span class="sicon">🖼</span><span class="slabel">头像</span><span class="sarrow">›</span></div>
-    <div class="sitem" onclick="openM('sm')"><span class="sicon">💬</span><span class="slabel">个性签名</span><span class="sval" id="st-st">个性签名</span><span class="sarrow">›</span></div>
-    <div class="stitle">AI 设置</div>
-    <div class="sitem" onclick="openM('aim')"><span class="sicon">🐋</span><span class="slabel">AI 头像</span><span class="sarrow">›</span></div>
-    <div class="sitem" onclick="openM('anm')"><span class="sicon">✏️</span><span class="slabel">AI 备注名</span><span class="sval" id="st-ainame">DeepSeek AI</span><span class="sarrow">›</span></div>
-    <div class="sitem" onclick="openM('km')"><span class="sicon">🔑</span><span class="slabel">更换 API Key</span><span class="sarrow">›</span></div>
-  </div>
-  <div class="bottom-nav" style="position:absolute;bottom:0;left:0;right:0;height:56px;">
-    <button class="nav-item active" id="nav-f" onclick="showTab('f')"><span class="icon">👥</span><span class="label">朋友</span></button>
-    <button class="nav-item" id="nav-c" onclick="showTab('c')"><span class="icon">💬</span><span class="label">聊天</span></button>
-    <button class="nav-item" id="nav-m" onclick="showTab('m')"><span class="icon">⚙️</span><span class="label">更多</span></button>
-  </div>
-</div>
-<div class="screen hidden" id="chat-screen" style="background:var(--chat-bg);">
-  <div class="chat-header">
-    <button class="back" onclick="closeChat()">‹</button>
-    <div class="hav" id="ch-av">🐋</div>
-    <div class="hinfo"><div class="hname" id="ch-name">DeepSeek AI</div><div class="hst" id="ch-st">在线</div></div>
-    <button class="hbtn">🔍</button><button class="hbtn">☰</button>
-  </div>
-  <div class="messages" id="messages">
-    <div class="date-div" id="chat-date"></div>
-  </div>
-  <div class="epicker" id="epicker"></div>
-  <div class="input-area">
-    <div class="input-row">
-      <button class="iabtn" onclick="toggleE()">😊</button>
-      <div class="ibox"><textarea id="msginput" placeholder="메시지 입력" rows="1"></textarea></div>
-      <button class="iabtn sbtn" id="sbtn" onclick="sendMsg()" disabled>➤</button>
-    </div>
-  </div>
-</div>
-<div class="notif" id="notif" onclick="notifClick()">
-  <div class="nav" id="n-av">🐋</div>
-  <div><div class="ntitle" id="n-title">DeepSeek AI</div><div class="nbody" id="n-body"></div></div>
-</div>
-<div class="moverlay" id="pm"><div class="msheet"><h3>编辑昵称</h3><input type="text" id="pm-n" placeholder="输入昵称" maxlength="20"/><div class="btnrow"><button class="mbtn s" onclick="closeM('pm')">取消</button><button class="mbtn p" onclick="savePm()">保存</button></div></div></div>
+  <div class="moverlay" id="pm"><div class="msheet"><h3>编辑昵称</h3><input type="text" id="pm-n" placeholder="输入昵称" maxlength="20"/><div class="btnrow"><button class="mbtn s" onclick="closeM('pm')">取消</button><button class="mbtn p" onclick="savePm()">保存</button></div></div></div>
 <div class="moverlay" id="am"><div class="msheet"><h3>选择我的头像</h3><div class="avgrid" id="my-avg"></div><div class="btnrow"><button class="mbtn s" onclick="closeM('am')">取消</button><button class="mbtn p" onclick="saveAm()">保存</button></div></div></div>
 <div class="moverlay" id="sm"><div class="msheet"><h3>编辑个性签名</h3><input type="text" id="sm-s" placeholder="输入签名" maxlength="40"/><div class="btnrow"><button class="mbtn s" onclick="closeM('sm')">取消</button><button class="mbtn p" onclick="saveSm()">保存</button></div></div></div>
 <div class="moverlay" id="aim"><div class="msheet"><h3>选择 AI 头像</h3><div class="avgrid" id="ai-avg"></div><div class="btnrow"><button class="mbtn s" onclick="closeM('aim')">取消</button><button class="mbtn p" onclick="saveAim()">保存</button></div></div></div>
